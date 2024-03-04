@@ -83,6 +83,7 @@ async def send_data_to_subscribers(data):
 # FastAPI CRUDL endpoints
 @app.post("/processed_agent_data/")
 async def create_processed_agent_data(data: List[ProcessedAgentData]):
+    # await
     # Insert data to database
     # Send data to subscribers
 
