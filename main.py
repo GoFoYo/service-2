@@ -78,3 +78,26 @@ async def websocket_endpoint(websocket: WebSocket):
 async def send_data_to_subscribers(data):
     for websocket in subscriptions:
         await websocket.send_json(json.dumps(data))
+
+
+# FastAPI CRUDL endpoints
+@app.post("/processed_agent_data/")
+async def create_processed_agent_data(data: List[ProcessedAgentData]):
+    # Insert data to database
+    # Send data to subscribers
+
+@app.get("/processed_agent_data/{processed_agent_data_id}",response_model=ProcessedAgentDataInDB)
+def read_processed_agent_data(processed_agent_data_id: int):
+    # Get data by id
+
+@app.get("/processed_agent_data/",response_model=list[ProcessedAgentDataInDB])
+def list_processed_agent_data():
+    # Get list of data
+
+@app.put("/processed_agent_data/{processed_agent_data_id}", response_model=ProcessedAgentDataInDB)
+def update_processed_agent_data(processed_agent_data_id: int, data: ProcessedAgentData):
+# Update data
+
+@app.delete("/processed_agent_data/{processed_agent_data_id}", response_model=ProcessedAgentDataInDB)
+def delete_processed_agent_data(processed_agent_data_id: int):
+    # Delete by id
