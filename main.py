@@ -21,7 +21,7 @@ Column("y", Float),
 Column("z", Float),
 Column("latitude", Float),
 Column("longitude", Float),
-Column("timestamp", DateTime),
+Column("timestamp_", DateTime),
 )
 
 
@@ -38,9 +38,9 @@ class GpsData(BaseModel):
 class AgentData(BaseModel):
     accelerometer: AccelerometerData
     gps: GpsData
-    timestamp: datetime
+    timestamp_: datetime
     @classmethod
-    @validator('timestamp')
+    @validator('timestamp_')
     def check_timestamp(cls, value):
         if isinstance(value, datetime):
             return value
@@ -62,7 +62,7 @@ class ProcessedAgentDataInDB(BaseModel):
     z: float
     latitude: float
     longitude: float
-    timestamp: datetime
+    timestamp_: datetime
 
 
 # FastAPI app setup
@@ -92,7 +92,7 @@ async def create_processed_agent_data(data: List[ProcessedAgentData]):
     # await
     # Insert data to database
     # Send data to subscribers
-    async with engine.connect() as conn:
+    with engine.connect() as conn:
         for item in data:
             query = processed_agent_data.insert().values(
                 road_state=item.road_state,
@@ -101,10 +101,10 @@ async def create_processed_agent_data(data: List[ProcessedAgentData]):
                 z=item.agent_data.accelerometer.z,
                 latitude=item.agent_data.gps.latitude,
                 longitude=item.agent_data.gps.longitude,
-                timestamp=item.agent_data.timestamp
+                timestamp_=item.agent_data.timestamp_
             )
-            await conn.execute(query)
-    await send_data_to_subscribers(data)
+            conn.execute(query)
+    send_data_to_subscribers(data)
 
 @app.get("/processed_agent_data/{processed_agent_data_id}",response_model=ProcessedAgentDataInDB)
 def read_processed_agent_data(processed_agent_data_id: int):
@@ -135,7 +135,7 @@ def update_processed_agent_data(processed_agent_data_id: int, data: ProcessedAge
         z=data.agent_data.accelerometer.z,
         latitude=data.agent_data.gps.latitude,
         longitude=data.agent_data.gps.longitude,
-        timestamp=data.agent_data.timestamp
+        timestamp_=data.agent_data.timestamp_
     )
     with engine.connect() as conn:
         conn.execute(query)

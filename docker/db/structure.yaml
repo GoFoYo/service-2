@@ -6,5 +6,5 @@ y FLOAT,
 z FLOAT,
 latitude FLOAT,
 longitude FLOAT,
-timestamp TIMESTAMP
+timestamp_ TIMESTAMP
 );
